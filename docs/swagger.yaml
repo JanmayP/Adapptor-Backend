@@ -1,0 +1,91 @@
+definitions:
+  api.ActionRequest:
+    properties:
+      action:
+        description: The action to perform
+        enum:
+        - primary
+        - secondary
+        example: primary
+        type: string
+    type: object
+  api.ActionResponse:
+    properties:
+      message:
+        description: A descriptive message
+        example: Action processed
+        type: string
+      status:
+        description: The status of the action
+        example: success
+        type: string
+    type: object
+  api.ErrorResponse:
+    properties:
+      error:
+        description: Error message
+        example: Invalid request body
+        type: string
+    type: object
+  api.WelcomeResponse:
+    properties:
+      message:
+        description: Welcome message
+        example: Welcome to the Adapptor Backend API!
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /action:
+    post:
+      consumes:
+      - application/json
+      description: Process one of the available actions (primary or secondary)
+      parameters:
+      - description: Action request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.ActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ActionResponse'
+        "400":
+          description: Invalid request body or action
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "401":
+          description: Unauthorized - Invalid or missing token
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Process an action
+      tags:
+      - action
+  /welcome:
+    get:
+      description: Returns a welcome message
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.WelcomeResponse'
+        "401":
+          description: Unauthorized - Invalid or missing token
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get welcome message
+      tags:
+      - welcome
+swagger: "2.0"
